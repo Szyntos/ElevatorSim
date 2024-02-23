@@ -39,21 +39,21 @@ public class ElevatorSystem {
     }
 
     public void initializeFloors(){
-        int floorHeight = parent.height/(floorCount * 2);
-        int floorWidth = parent.width/5*2;
+//        int floorHeight = parent.height/(floorCount * 2);
+//        int floorWidth = parent.width;
         for (int i = 0; i < floorCount; i++) {
             this.floors[i] = new Floor(i, this, parent);
-            this.floors[i].setPosition(parent.width / 10 * 2, parent.height - parent.height / floorCount * (i) - floorHeight,
-                    floorWidth, floorHeight/2);
+//            this.floors[i].setPosition(0, parent.height - parent.height / floorCount * (i) - floorHeight,
+//                    floorWidth, floorHeight/2);
         }
     }
 
     public void initializeElevators(){
-        int elevatorHeight = parent.height/(floorCount * 2);
-        int elevatorWidth = parent.width/20;
+//        int elevatorHeight = parent.height/(floorCount * 2);
+//        int elevatorWidth = parent.width/20;
         for (int i = 0; i < elevatorCount; i++) {
             this.elevators[i] = new Elevator(i, this.elevatorCapacity, floors, elevatorCount, parent);
-            this.elevators[i].setDimensions(elevatorWidth, elevatorHeight);
+//            this.elevators[i].setDimensions(elevatorWidth, elevatorHeight);
             this.elevators[i].update();
         }
     }
@@ -63,19 +63,24 @@ public class ElevatorSystem {
         this.floors[floorID].addPerson(Gregory);
     }
 
-    public void spawnRandomPerson(){
+    public void addPersonToFloor(int floorID, int desiredFloorID, int personID){
+        Person Gregory = new Person(personID, this.floors[floorID], this.floors[desiredFloorID], parent);
+        this.floors[floorID].addPerson(Gregory);
+    }
+
+    public void spawnRandomPerson(int personID){
+
         int floorID = random.nextInt(floorCount);
 
         int desiredFloorID = random.nextInt(floorCount);
         while (desiredFloorID == floorID){
             desiredFloorID = random.nextInt(floorCount);
         }
-        addPersonToFloor(floorID, desiredFloorID);
+
+        addPersonToFloor(floorID, desiredFloorID, personID);
     }
 
     public void pickup(int fromFloor, Direction direction){
-
-
 
         int minimalETA = Integer.MAX_VALUE;
 
@@ -86,7 +91,6 @@ public class ElevatorSystem {
             }
         }
 
-
         int count = 0;
         for (Elevator elevator :
                 elevators) {
@@ -94,6 +98,7 @@ public class ElevatorSystem {
                 count++;
             }
         }
+
         Elevator[] suitableElevators = new Elevator[count];
         int j = 0;
         for (int i = 0; i < elevatorCount; i++) {
@@ -102,9 +107,8 @@ public class ElevatorSystem {
                 j++;
             }
         }
-        suitableElevators[random.nextInt(suitableElevators.length)].call(fromFloor, direction);
 
-//        elevators[0].call(fromFloor, direction);
+        suitableElevators[random.nextInt(suitableElevators.length)].call(fromFloor, direction);
     }
 
     public void update(int elevatorID, int newCurrentFloor, int newDesiredFloor){

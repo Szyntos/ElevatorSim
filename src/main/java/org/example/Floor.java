@@ -10,21 +10,21 @@ public class Floor {
     private final PApplet parent;
     private final ElevatorSystem elevatorSystem;
     public int ID;
-    int x;
-    int y;
-    int width;
-    int height;
+//    int x;
+//    int y;
+//    int width;
+//    int height;
     boolean upPressed = false;
     boolean downPressed = false;
     List<Elevator> upElevators = new ArrayList<>();
     List<Elevator> downElevators = new ArrayList<>();
     List<Person> people = new ArrayList<>();
-    Color color = new Color(0, 0, 0);
+//    Color color = new Color(0, 0, 0);
     public Floor(int ID, ElevatorSystem elevatorSystem, PApplet parent){
         this.ID = ID;
         this.elevatorSystem = elevatorSystem;
         this.parent = parent;
-        this.color.setHSL(1/(double)(elevatorSystem.floorCount+1) * ID,1, 0.5);
+//        this.color.setHSL(1/(double)(elevatorSystem.floorCount+1) * ID,1, 0.5);
     }
 
 
@@ -34,6 +34,9 @@ public class Floor {
     }
 
     public void pressUp(){
+        if (ID == 2){
+            System.out.println("asdasdas");
+        }
         upPressed = true;
         elevatorSystem.pickup(ID, Direction.UP);
     }
@@ -80,19 +83,64 @@ public class Floor {
                     .toArray(Person[]::new);
         }
 
-
+        boolean elevatorAlreadyExists = false;
         if (elevator.getDirection() == Direction.UP){
             upPressed = false;
+
+            for (Elevator upElevator :
+                    upElevators) {
+                if (upElevator == elevator) {
+                    elevatorAlreadyExists = true;
+                    break;
+                }
+            }
+            if (!elevatorAlreadyExists){
+                upElevators.add(elevator);
+            }
             upElevators.add(elevator);
+
 
         } else if (elevator.getDirection() == Direction.DOWN){
             downPressed = false;
-            downElevators.add(elevator);
+
+            for (Elevator downElevator :
+                    downElevators) {
+                if (downElevator == elevator) {
+                    elevatorAlreadyExists = true;
+                    break;
+                }
+            }
+            if (!elevatorAlreadyExists){
+                downElevators.add(elevator);
+            }
+//            downElevators.add(elevator);
+
         } else {
             upPressed = false;
-            upElevators.add(elevator);
+            for (Elevator upElevator :
+                    upElevators) {
+                if (upElevator == elevator) {
+                    elevatorAlreadyExists = true;
+                    break;
+                }
+            }
+            if (!elevatorAlreadyExists){
+                upElevators.add(elevator);
+            }
+//            upElevators.add(elevator);
+            elevatorAlreadyExists = false;
             downPressed = false;
-            downElevators.add(elevator);
+            for (Elevator downElevator :
+                    downElevators) {
+                if (downElevator == elevator) {
+                    elevatorAlreadyExists = true;
+                    break;
+                }
+            }
+            if (!elevatorAlreadyExists){
+                downElevators.add(elevator);
+            }
+//            downElevators.add(elevator);
         }
 
 
@@ -108,8 +156,48 @@ public class Floor {
     }
 
     public void closeDoors(Elevator elevator, Direction direction){
-        upElevators.remove(elevator);
-        downElevators.remove(elevator);
+        boolean elevatorExists = false;
+
+        for (Elevator upElevator :
+                upElevators) {
+            if (upElevator == elevator) {
+                elevatorExists = true;
+                break;
+            }
+        }
+
+        while (elevatorExists){
+            elevatorExists = false;
+            for (Elevator upElevator :
+                    upElevators) {
+                if (upElevator == elevator) {
+                    elevatorExists = true;
+                    break;
+                }
+            }
+            upElevators.remove(elevator);
+        }
+
+        for (Elevator downElevator :
+                downElevators) {
+            if (downElevator == elevator) {
+                elevatorExists = true;
+                break;
+            }
+        }
+
+        while (elevatorExists){
+            elevatorExists = false;
+            for (Elevator downElevator :
+                    downElevators) {
+                if (downElevator == elevator) {
+                    elevatorExists = true;
+                    break;
+                }
+            }
+            downElevators.remove(elevator);
+        }
+
     }
 
     public boolean setElevatorForPerson(Person person){
@@ -117,7 +205,13 @@ public class Floor {
         if (person.getDirection() == Direction.UP){
             for (Elevator upElevator : upElevators) {
                 elevator = upElevator;
+                if (person.ID == 474){
+                    System.out.println("DODONE");
+                }
                 if (elevator.canAddPassenger()) {
+                    if (person.ID == 474){
+                        System.out.println("DODONE2");
+                    }
                     person.setElevator(elevator);
                     elevator.addPassenger(person);
                     people.remove(person);
@@ -148,8 +242,8 @@ public class Floor {
 
 
     public void draw(){
-        parent.fill(color.r, color.g, color.b);
-        parent.rect(this.x, this.y, this.width, this.height);
+//        parent.fill(color.r, color.g, color.b);
+//        parent.rect(this.x, this.y, this.width, this.height);
         int rows = 3;
         int j = 0;
         int k = 0;
@@ -158,23 +252,23 @@ public class Floor {
                 j = 0;
                 k++;
             }
-            person.draw(this.x - k * person.getWidth() * 2, this.y - j * person.getHeight());
+//            person.draw(this.x - k * person.getWidth() * 2 + parent.width/3, this.y - j * person.getHeight());
             j++;
         }
     }
 
-    public void setPosition(int x, int y, int width, int height){
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
+//    public void setPosition(int x, int y, int width, int height){
+//        this.x = x;
+//        this.y = y;
+//        this.width = width;
+//        this.height = height;
+//    }
 
-    public int getYPos(){
-        return this.y;
-    }
-
-    public int getXPos(){
-        return this.x;
-    }
+//    public int getYPos(){
+//        return this.y;
+//    }
+//
+//    public int getXPos(){
+//        return this.x;
+//    }
 }

@@ -46,6 +46,14 @@ public class Color {
         return (int) Math.round(value);
     }
 
+    public void setToFloor(int floorID, int floorCount){
+        this.setHSL(1/(double)(floorCount+1) * floorID,1, 0.5);
+    }
+
+    public void printRGB(){
+        System.out.println("R = " + r + ", G = " + g + ",B = " + b);
+    }
+
 
     public int[] toArray(){
         return new int[]{r, g, b};

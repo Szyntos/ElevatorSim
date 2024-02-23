@@ -6,10 +6,11 @@ public class Main extends PApplet{
     public int windowWidth = 800;
     public int windowHeight = 600;
     int elevatorCapacity = 10;
-    int elevatorCount = 16;
+    int elevatorCount = 5;
     int floorCount = 10;
-    int initialPeopleCount = 5000;
-    int frameStep = 5;
+    int initialPeopleCount = 500;
+    int frameStep = 10;
+    Drawer drawer;
     public static void main(String[] args) {
         PApplet.main("org.example.Main");
     }
@@ -18,8 +19,8 @@ public class Main extends PApplet{
 
     public void settings() {
         size(windowWidth, windowHeight);
-
-        system = new ElevatorSystem(floorCount, elevatorCount, elevatorCapacity, this);
+        system = new ElevatorSystem(floorCount, elevatorCount, elevatorCapacity, this, 123);
+        drawer = new Drawer(system, this);
     }
 
     public void setup(){
@@ -29,7 +30,7 @@ public class Main extends PApplet{
 
 
         for (int j = 0; j < initialPeopleCount; j++) {
-            system.spawnRandomPerson();
+            system.spawnRandomPerson(j);
         }
     }
 
@@ -49,7 +50,7 @@ public class Main extends PApplet{
 //            ellipse(0, 0, 50, 50);
 //        }
 
-        system.draw();
+        drawer.draw();
 
     }
 }
