@@ -1,5 +1,7 @@
-package org.example;
+package org.example.drawer;
 
+import org.example.Floor;
+import org.example.Person;
 import processing.core.PApplet;
 
 public class FloorDrawer implements Drawable {
@@ -35,7 +37,7 @@ public class FloorDrawer implements Drawable {
         int rows = 3;
         int j = 0;
         int k = 0;
-        for (Person person : floor.people) {
+        for (Person person : floor.getPeople()) {
             if (j > rows - 1) {
                 j = 0;
                 k++;

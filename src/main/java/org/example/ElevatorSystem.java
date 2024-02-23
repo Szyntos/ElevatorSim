@@ -52,7 +52,7 @@ public class ElevatorSystem {
 //        int elevatorHeight = parent.height/(floorCount * 2);
 //        int elevatorWidth = parent.width/20;
         for (int i = 0; i < elevatorCount; i++) {
-            this.elevators[i] = new Elevator(i, this.elevatorCapacity, floors, elevatorCount, parent);
+            this.elevators[i] = new Elevator(i, this.elevatorCapacity, floors);
 //            this.elevators[i].setDimensions(elevatorWidth, elevatorHeight);
             this.elevators[i].update();
         }
@@ -125,15 +125,6 @@ public class ElevatorSystem {
         for (Floor floor :
                 floors) {
             floor.update();
-        }
-    }
-
-    public void draw(){
-        for (int i = 0; i < floorCount; i++) {
-            floors[i].draw();
-        }
-        for (int i = 0; i < elevatorCount; i++) {
-            elevators[i].draw();
         }
     }
 

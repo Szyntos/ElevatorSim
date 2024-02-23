@@ -1,4 +1,4 @@
-package org.example;
+package org.example.drawer;
 
 public class Color {
     int r;

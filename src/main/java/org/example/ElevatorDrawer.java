@@ -1,8 +1,11 @@
 package org.example;
 
+import org.example.drawer.Color;
+import org.example.drawer.Drawable;
+import org.example.drawer.PersonDrawer;
 import processing.core.PApplet;
 
-public class ElevatorDrawer implements Drawable{
+public class ElevatorDrawer implements Drawable {
 
     Elevator elevator;
     PApplet parent;

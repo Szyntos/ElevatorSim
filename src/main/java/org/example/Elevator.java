@@ -1,16 +1,9 @@
 package org.example;
 
-import processing.core.PApplet;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Elevator {
-    private final PApplet parent;
-//    int x;
-//    int y;
-//    int width;
-//    int height;
     private int currentFloor = 0;
     private int desiredFloor = 0;
     private final Floor[] allFloors;
@@ -23,15 +16,12 @@ public class Elevator {
     private boolean isMoving = false;
     private final List<Person> passengers = new ArrayList<>();
     private Direction direction = Direction.ZERO;
-    private final int elevatorCount;
-    public Elevator(int ID, int capacity, Floor[] allFloors, int elevatorCount, PApplet parent){
+    public Elevator(int ID, int capacity, Floor[] allFloors){
         this.ID = ID;
         this.capacity = capacity;
-        this.parent = parent;
         this.allFloors = allFloors;
         this.floorButtonsPressed = new boolean[allFloors.length];
 
-        this.elevatorCount = elevatorCount;
 
         this.pickupUpDirections = new boolean[allFloors.length];
         this.pickupDownDirections = new boolean[allFloors.length];
@@ -65,35 +55,39 @@ public class Elevator {
         if (currentFloor != desiredFloor){
             if (!isMoving){
                 isMoving = true;
+            }
 
-            }
-            if (direction == Direction.UP){
-                setCurrentFloor(currentFloor + 1);
-            } else if (direction == Direction.DOWN){
-                setCurrentFloor(currentFloor - 1);
-            } else {
-                setCurrentFloor(currentFloor);
-            }
+            move();
+
         } else {
-            if (!isAnyFloorIsPressed()){
+            if (!isAnyFloorPressed()){
                 isMoving = false;
                 direction = Direction.ZERO;
             }
+
             dropOffPassengers();
             allFloors[currentFloor].openDoors(this);
-            allFloors[currentFloor].closeDoors(this, direction);
+            allFloors[currentFloor].closeDoors(this);
         }
-//        updatePosition();
 
         for (Person person : passengers) {
             person.update();
         }
 
         setNewDesiredFloor();
-
     }
 
-    public boolean isAnyFloorIsPressed(){
+    public void move(){
+        if (direction == Direction.UP){
+            setCurrentFloor(currentFloor + 1);
+        } else if (direction == Direction.DOWN){
+            setCurrentFloor(currentFloor - 1);
+        } else {
+            setCurrentFloor(currentFloor);
+        }
+    }
+
+    public boolean isAnyFloorPressed(){
         for (boolean button :
                 floorButtonsPressed) {
             if (button) {
@@ -114,152 +108,159 @@ public class Elevator {
     }
 
     public void updateFloorsToVisit(){
-//        updateDirection();
         Direction directionToPickUp;
-        Direction directionToNextButtonPress = Direction.ZERO;
-        for (int i = currentFloor; i < floorButtonsPressed.length; i++) {
-            if (floorButtonsPressed[i]) {
-                directionToNextButtonPress = Direction.UP;
-                break;
-            }
-        }
-        for (int i = currentFloor; i >= 0; i--) {
-            if (floorButtonsPressed[i]) {
-                directionToNextButtonPress = Direction.DOWN;
-                break;
-            }
-        }
+        Direction directionToNextButtonPress = checkDirectionToNextStop(floorButtonsPressed);
 
-
-
+        // Set the chosen floors as to-be-visited
         for (int i = 0; i < floorsToVisit.length; i++) {
             if (floorButtonsPressed[i]){
                 floorsToVisit[i] = true;
             }
         }
-        if (this.direction == Direction.UP){
-            for (int i = currentFloor; i < allFloors.length; i++) {
-                if (pickupUpDirections[i]){
-                    if (i == currentFloor && !canAddPassenger()){
-                        continue;
+
+        // Set suitable pickups as to-be-visited
+        // Elevator can pick up passengers, that want to go in the same direction as itself, from floors above itself
+
+        switch (this.direction){
+            case UP -> {
+
+                for (int i = currentFloor; i < allFloors.length; i++) {
+                    if (pickupUpDirections[i]){
+                        if (i == currentFloor && !canAddPassenger()){
+                            continue;
+                        }
+                        floorsToVisit[i] = true;
+                        pickupUpDirections[i] = false;
                     }
-                    floorsToVisit[i] = true;
-//                    pickups[i] = false;
-                    if (i == 2){
-                        System.out.println("TUTAJ");
+                }
+
+            }
+            case DOWN -> {
+
+                for (int i = currentFloor; i >= 0; i--) {
+                    if (pickupDownDirections[i]){
+                        if (i == currentFloor && !canAddPassenger()){
+                            continue;
+                        }
+                        floorsToVisit[i] = true;
+                        pickupDownDirections[i] = false;
+                    }
+                }
+
+            }
+            case ZERO -> {
+                // If Elevator is stationary it can pick up people on its way to the next floor
+                for (int i = 0; i < allFloors.length; i++) {
+
+                    directionToPickUp = currentFloor == i ? Direction.ZERO :
+                            (currentFloor > i ? Direction.DOWN : Direction.UP);
+
+                    switch (directionToPickUp){
+                        case ZERO -> {
+
+                            pickupUpDirections[i] = false;
+                            pickupDownDirections[i] = false;
+
+                        }
+                        case UP -> {
+
+                            if (pickupUpDirections[i] && directionToPickUp == directionToNextButtonPress){
+                                floorsToVisit[i] = true;
+                                pickupUpDirections[i] = false;
+                            }
+
+                        }
+                        case DOWN -> {
+
+                            if (pickupDownDirections[i] && directionToPickUp == directionToNextButtonPress){
+                                floorsToVisit[i] = true;
+                                pickupDownDirections[i] = false;
+                            }
+
+                        }
                     }
 
-                    pickupUpDirections[i] = false;
                 }
-            }
-        }else if (this.direction == Direction.DOWN){
-            for (int i = currentFloor; i >= 0; i--) {
-                if (pickupDownDirections[i]){
-                    if (i == currentFloor && !canAddPassenger()){
-                        continue;
+
+                // If the elevator has no to-be-visited-floors it sets one of the pickups as to-be-visited
+                if (!isAnyFloorToBeVisited()){
+
+                    for (int i = 0; i < allFloors.length; i++) {
+                        if (pickupUpDirections[i]){
+                            floorsToVisit[i] = true;
+                            break;
+                        } else if (pickupDownDirections[i]){
+                            floorsToVisit[i] = true;
+                            break;
+                        }
                     }
-                    floorsToVisit[i] = true;
-//                    pickups[i] = false;
-                    pickupDownDirections[i] = false;
-                }
-            }
-        } else {
-            for (int i = 0; i < allFloors.length; i++) {
-                directionToPickUp = currentFloor == i ? Direction.ZERO :
-                        (currentFloor > i ? Direction.DOWN : Direction.UP);
-                if (directionToPickUp == Direction.ZERO){
-                    pickupUpDirections[i] = false;
-                    pickupDownDirections[i] = false;
-                }else
-                if (directionToPickUp == Direction.UP && pickupUpDirections[i] &&
-                        directionToPickUp == directionToNextButtonPress){
-                    floorsToVisit[i] = true;
-                    pickupUpDirections[i] = false;
-                } else if (directionToPickUp == Direction.DOWN && pickupDownDirections[i] &&
-                        directionToPickUp == directionToNextButtonPress){
-                    floorsToVisit[i] = true;
-                    pickupDownDirections[i] = false;
-                }
-            }
-            if (!isAnyFloorToBeVisited()){
-                for (int i = 0; i < allFloors.length; i++) {
-                    if (pickupUpDirections[i]){
-                        floorsToVisit[i] = true;
-//                        pickupUpDirections[i] = false;
-                        break;
-                    } else if (pickupDownDirections[i]){
-                        floorsToVisit[i] = true;
-//                        pickupDownDirections[i] = false;
-                        break;
-                    }
+
                 }
             }
         }
-
     }
 
-    public void setNewDesiredFloor(){
-        updateFloorsToVisit();
-        System.out.println("======================================================");
-        System.out.println(this.ID);
-        System.out.println("Floors to visit:");
-        for (int i = 0; i < floorButtonsPressed.length; i++) {
-            if (isFloorToBeVisited(i)){
-                System.out.println("Floor " + i);
-            }
-
-        }
-        System.out.println("Pickups:");
-        for (int i = 0; i < pickupUpDirections.length; i++) {
-            if (pickupUpDirections[i]){
-                System.out.println("Pickup UP " + i);
-            }
-            if (pickupDownDirections[i]){
-                System.out.println("Pickup Down " + i);
-            }
-
-        }
-
-
-        Direction directionToNextFloor = Direction.ZERO;
-        for (int i = currentFloor; i < floorsToVisit.length; i++) {
-            if (floorsToVisit[i]) {
-                directionToNextFloor = Direction.UP;
+    public Direction checkDirectionToNextStop(boolean[] floors){
+        Direction direction = Direction.ZERO;
+        int distanceUp = 0;
+        int distanceDown = 0;
+        for (int i = currentFloor; i < floors.length; i++) {
+            if (floors[i]) {
+                direction = Direction.UP;
+                distanceUp++;
                 break;
             }
         }
         for (int i = currentFloor; i >= 0; i--) {
-            if (floorsToVisit[i]) {
-                directionToNextFloor = Direction.DOWN;
+            if (floors[i]) {
+                direction = Direction.DOWN;
+                distanceDown++;
                 break;
             }
         }
+        return direction == Direction.ZERO ? Direction.ZERO :
+                (distanceUp > distanceDown ? Direction.UP : Direction.DOWN);
+    }
 
-        if (this.direction == Direction.UP){
-            for (int i = currentFloor; i < allFloors.length; i++) {
-                if (isFloorToBeVisited(i)){
-                    setDesiredFloor(i);
-                    return;
-                }
-            }
-        }else if (this.direction == Direction.DOWN){
+    public void setNewDesiredFloor(){
+        updateFloorsToVisit();
+        Direction directionToNextFloor = checkDirectionToNextStop(floorsToVisit);
 
-            for (int i = currentFloor; i >= 0; i--) {
-                if (isFloorToBeVisited(i)){
-                    setDesiredFloor(i);
-                    return;
+        // New desired floor should be the first floor in the direction of travel
+        switch (this.direction){
+            case UP -> {
+
+                for (int i = currentFloor; i < allFloors.length; i++) {
+                    if (isFloorToBeVisited(i)){
+                        setDesiredFloor(i);
+                        return;
+                    }
                 }
+
             }
-        } else {
-            for (int i = 0; i < allFloors.length; i++) {
-                if (isFloorToBeVisited(i)){
-                    setDesiredFloor(i);
-                    return;
+            case DOWN -> {
+
+                for (int i = currentFloor; i >= 0; i--) {
+                    if (isFloorToBeVisited(i)){
+                        setDesiredFloor(i);
+                        return;
+                    }
                 }
+
+            }
+            case ZERO -> {
+
+                for (int i = 0; i < allFloors.length; i++) {
+                    if (isFloorToBeVisited(i)){
+                        setDesiredFloor(i);
+                        return;
+                    }
+                }
+
             }
         }
-        this.direction = directionToNextFloor;
 
+        this.direction = directionToNextFloor;
     }
 
     public void dropOffPassengers(){
@@ -270,7 +271,6 @@ public class Elevator {
 
     public void pushFloorButton(int floor){
         this.floorButtonsPressed[floor] = true;
-
     }
 
     public boolean[] getFloorButtonsPressed() {
@@ -285,54 +285,17 @@ public class Elevator {
         return floorsToVisit[floor];
     }
 
-//    public void setPosition(int x, int y){
-//        this.x = x;
-//        this.y = y;
-//    }
-
     public boolean isMoving() {
         return isMoving;
     }
 
-//    public void setDimensions(int width, int height){
-//        this.width = width;
-//        this.height = height;
-//    }
-
-//    public void updatePosition(){
-//        setPosition(parent.width/elevatorCount/2 * ID + parent.width/5 * 2,
-//                allFloors[currentFloor].getYPos() - height);
-//    }
 
     public void call(int toFloor, Direction direction){
-        if (toFloor == 2 && direction == Direction.UP){
-            System.out.println("000000000000000000000000000000000000000000000000000000000");
-        }
         if (direction == Direction.UP){
             pickupUpDirections[toFloor] = true;
         } else if (direction == Direction.DOWN) {
             pickupDownDirections[toFloor] = true;
         }
-    }
-
-    public void draw(){
-        parent.fill(95, 108, 133);
-//        parent.rect(this.x, this.y, this.width, this.height);
-        int j = 0;
-        int k = 0;
-        int rows = 3;
-        for (Person person : passengers) {
-            if (j > rows - 1) {
-                j = 0;
-                k++;
-            }
-//            person.draw(this.x - k * person.getWidth() * 2, this.y - j * person.getHeight());
-            j++;
-        }
-        parent.textAlign(parent.CENTER);
-        parent.textSize(20);
-        parent.fill(0);
-//        parent.text(direction.toString() + "\n" + passengers.size(), x + width, y + height);
     }
 
     public boolean delPassenger(Person passenger){
@@ -356,45 +319,64 @@ public class Elevator {
 
 
     public int getETA(int toFloor, Direction direction){
-        int penalty = getToVisitCount()*10 * 2;
-        int distance = Math.abs(currentFloor - toFloor)*10+1;
+        int multiplier = 10;
+
+        // Penalty is computed as twice the amount of floors already in the queue
+        // It is added when it is not suitable to pick this elevator for this particular pickup
+        int penalty = getToVisitCount()*multiplier * 2 + 1;
+
+        int distance = Math.abs(currentFloor - toFloor)*multiplier + 1;
+
         if (!isMoving || this.direction == Direction.ZERO){
             return distance;
         }
+
         if (currentFloor == toFloor){
+
             if (this.direction == direction){
                 return 0;
             } else {
                 return distance + penalty;
             }
+
         }
-        if (direction == Direction.UP){
-            if (currentFloor > toFloor){
-                if (direction == this.direction){
-                    return distance + penalty;
-                }else{
-                    return distance;
+        switch (direction){
+            case UP -> {
+
+                if (currentFloor > toFloor){
+                    if (direction == this.direction){
+                        return distance + penalty;
+                    }else{
+                        return distance;
+                    }
+                } else {
+                    if (direction == this.direction){
+                        return distance;
+                    }else{
+                        return distance + penalty;
+                    }
                 }
-            } else {
-                if (direction == this.direction){
-                    return distance;
-                }else{
-                    return distance + penalty;
-                }
+
             }
-        } else {
-            if (currentFloor > toFloor){
-                if (direction == this.direction){
-                    return distance;
-                }else{
-                    return distance + penalty;
+            case DOWN -> {
+
+                if (currentFloor > toFloor){
+                    if (direction == this.direction){
+                        return distance;
+                    }else{
+                        return distance + penalty;
+                    }
+                } else {
+                    if (direction == this.direction){
+                        return distance + penalty;
+                    }else{
+                        return distance;
+                    }
                 }
-            } else {
-                if (direction == this.direction){
-                    return distance + penalty;
-                }else{
-                    return distance;
-                }
+
+            }
+            default -> {
+                return distance;
             }
         }
     }
@@ -420,52 +402,44 @@ public class Elevator {
     }
 
     public void updateDirection(){
+
+        // This prevents the elevator from changing its direction to ZERO when, in fact, it is moving
         boolean doNotChangeDirection = false;
-        if (this.direction == Direction.UP){
-            for (int i = currentFloor; i < floorsToVisit.length; i++) {
-                if (floorsToVisit[i]) {
-                    doNotChangeDirection = true;
-                    break;
+
+        switch (this.direction){
+            case UP -> {
+                for (int i = currentFloor; i < floorsToVisit.length; i++) {
+                    if (floorsToVisit[i]) {
+                        doNotChangeDirection = true;
+                        break;
+                    }
                 }
             }
-        } else if (this.direction == Direction.DOWN) {
-            for (int i = currentFloor; i >= 0; i--) {
-                if (floorsToVisit[i]) {
-                    doNotChangeDirection = true;
-                    break;
+            case DOWN -> {
+                for (int i = currentFloor; i >= 0; i--) {
+                    if (floorsToVisit[i]) {
+                        doNotChangeDirection = true;
+                        break;
+                    }
                 }
+            }
+            default -> {
+
             }
         }
         if (!doNotChangeDirection){
             this.direction = currentFloor == desiredFloor ? Direction.ZERO :
                     (currentFloor > desiredFloor ? Direction.DOWN : Direction.UP);
         }
-
-
     }
 
     public void setCurrentFloor(int currentFloor) {
-//        printButtons();
         this.currentFloor = currentFloor;
         updateDirection();
-//        if (!isAnyFloorIsPressed()){
-//            this.direction = currentFloor == desiredFloor ? Direction.ZERO :
-//                    (currentFloor > desiredFloor ? Direction.DOWN : Direction.UP);
-//        }else {
-//            this.direction = currentFloor > desiredFloor ? Direction.DOWN : Direction.UP;
-//        }
-
     }
 
     public void setDesiredFloor(int desiredFloor) {
         this.desiredFloor = desiredFloor;
-
         updateDirection();
-//        if (!isAnyFloorIsPressed()){
-//            this.direction = currentFloor == desiredFloor ? Direction.ZERO :
-//                    (currentFloor > desiredFloor ? Direction.DOWN : Direction.UP);
-//        }else {
-//            this.direction = currentFloor > desiredFloor ? Direction.DOWN : Direction.UP;
-//        }
     }
 }

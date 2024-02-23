@@ -155,7 +155,7 @@ public class Floor {
 
     }
 
-    public void closeDoors(Elevator elevator, Direction direction){
+    public void closeDoors(Elevator elevator){
         boolean elevatorExists = false;
 
         for (Elevator upElevator :
@@ -231,6 +231,10 @@ public class Floor {
             }
         }
         return false;
+    }
+
+    public List<Person> getPeople(){
+        return people;
     }
 
     public void update(){

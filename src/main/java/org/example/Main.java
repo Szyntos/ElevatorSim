@@ -1,4 +1,5 @@
 package org.example;
+import org.example.drawer.Drawer;
 import processing.core.PApplet;
 
 public class Main extends PApplet{
