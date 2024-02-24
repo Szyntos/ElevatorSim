@@ -5,19 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ElevatorSystem implements ElevatorSystemInterface{
-    public Floor[] floors;
-    public int floorCount;
+    public FloorSystem floorSystem;
+
     public Elevator[] elevators;
     public int elevatorCount;
     public int elevatorCapacity;
     public int allTimePeopleCount = 0;
     Random random;
-    public ElevatorSystem(int floorCount, int elevatorCount, int elevatorCapacity, long seed){
+    public ElevatorSystem(FloorSystem floorSystem, int elevatorCount, int elevatorCapacity, long seed){
         random = new Random(seed);
 
-        this.floorCount = floorCount;
-        this.floors = new Floor[floorCount];
-        initializeFloors();
+        this.floorSystem = floorSystem;
 
         this.elevatorCount = elevatorCount;
         this.elevators = new Elevator[elevatorCount];
@@ -25,13 +23,10 @@ public class ElevatorSystem implements ElevatorSystemInterface{
         initializeElevators();
     }
 
-    public ElevatorSystem(int floorCount, int elevatorCount, int elevatorCapacity){
+    public ElevatorSystem(FloorSystem floorSystem, int elevatorCount, int elevatorCapacity){
         random = new Random();
 
-        this.floorCount = floorCount;
-        this.floors = new Floor[floorCount];
-        initializeFloors();
-
+        this.floorSystem = floorSystem;
         this.elevatorCount = elevatorCount;
         this.elevators = new Elevator[elevatorCount];
         this.elevatorCapacity = elevatorCapacity;
@@ -39,31 +34,31 @@ public class ElevatorSystem implements ElevatorSystemInterface{
     }
 
     public void initializeFloors(){
-        for (int i = 0; i < floorCount; i++) {
-            this.floors[i] = new Floor(i, this);
+        for (int i = 0; i < this.floorSystem.getFloorCount(); i++) {
+            this.floorSystem.getFloors()[i] = new Floor(i);
         }
     }
 
     public void initializeElevators(){
         for (int i = 0; i < elevatorCount; i++) {
-            this.elevators[i] = new Elevator(i, this.elevatorCapacity, floors);
+            this.elevators[i] = new Elevator(i, this.elevatorCapacity, this.floorSystem.getFloors());
             this.elevators[i].update();
         }
     }
 
     public void addPersonToFloor(int floorID, int desiredFloorID){
-        Person Gregory = new Person(allTimePeopleCount, this.floors[floorID], this.floors[desiredFloorID]);
+        Person Gregory = new Person(allTimePeopleCount, this.floorSystem.getFloors()[floorID], this.floorSystem.getFloors()[desiredFloorID]);
         allTimePeopleCount++;
-        this.floors[floorID].addPerson(Gregory);
+        this.floorSystem.getFloors()[floorID].addPerson(Gregory);
     }
 
     public void spawnRandomPerson(){
 
-        int floorID = random.nextInt(floorCount);
+        int floorID = random.nextInt(this.floorSystem.getFloorCount());
 
-        int desiredFloorID = random.nextInt(floorCount);
+        int desiredFloorID = random.nextInt(this.floorSystem.getFloorCount());
         while (desiredFloorID == floorID){
-            desiredFloorID = random.nextInt(floorCount);
+            desiredFloorID = random.nextInt(this.floorSystem.getFloorCount());
         }
 
         addPersonToFloor(floorID, desiredFloorID);
@@ -105,7 +100,7 @@ public class ElevatorSystem implements ElevatorSystemInterface{
             elevator.update();
         }
         for (Floor floor :
-                floors) {
+                this.floorSystem.getFloors()) {
             floor.update();
         }
     }

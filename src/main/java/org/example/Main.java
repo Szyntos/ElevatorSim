@@ -5,6 +5,7 @@ import processing.core.PApplet;
 
 public class Main extends PApplet{
     static ElevatorSystem system;
+    static FloorSystem floorSystem;
     public int windowWidth = 800;
     public int windowHeight = 600;
     int elevatorCapacity = 10;
@@ -22,8 +23,10 @@ public class Main extends PApplet{
 
     public void settings() {
         size(windowWidth, windowHeight);
-        system = new ElevatorSystem(floorCount, elevatorCount, elevatorCapacity, 123);
-        drawer = new Drawer(system, this);
+        floorSystem = new FloorSystem(floorCount);
+        system = new ElevatorSystem(floorSystem, elevatorCount, elevatorCapacity, 123);
+        floorSystem.addElevatorSystem(system);
+        drawer = new Drawer(floorSystem, system, this);
         gui = new Gui(system, this);
     }
 

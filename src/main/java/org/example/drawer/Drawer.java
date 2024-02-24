@@ -1,14 +1,17 @@
 package org.example.drawer;
 
 import org.example.ElevatorSystem;
+import org.example.FloorSystem;
 import processing.core.PApplet;
 
 public class Drawer implements Drawable{
     PApplet parent;
     ElevatorSystem system;
+    FloorSystem floorSystem;
     FloorDrawer[] floorDrawers;
     ElevatorDrawer[] elevatorDrawers;
-    public Drawer(ElevatorSystem system, PApplet parent){
+    public Drawer(FloorSystem floorSystem, ElevatorSystem system, PApplet parent){
+        this.floorSystem = floorSystem;
         this.system = system;
         this.parent = parent;
         initializeFloorDrawers();
@@ -16,17 +19,17 @@ public class Drawer implements Drawable{
     }
 
     public void initializeFloorDrawers(){
-        this.floorDrawers = new FloorDrawer[system.floorCount];
-        for (int i = 0; i < system.floorCount; i++) {
-            this.floorDrawers[i] = new FloorDrawer(system.floors[i], system.floorCount, parent);
+        this.floorDrawers = new FloorDrawer[floorSystem.getFloorCount()];
+        for (int i = 0; i < floorSystem.getFloorCount(); i++) {
+            this.floorDrawers[i] = new FloorDrawer(floorSystem.getFloors()[i], floorSystem.getFloorCount(), parent);
         }
         this.elevatorDrawers = new ElevatorDrawer[system.elevatorCount];
     }
     public void initializeElevatorDrawers(){
-        int elevatorHeight = parent.height/(system.floorCount * 2);
+        int elevatorHeight = parent.height/(floorSystem.getFloorCount() * 2);
         int elevatorWidth = parent.width/20;
         for (int i = 0; i < system.elevatorCount; i++) {
-            this.elevatorDrawers[i] = new ElevatorDrawer(system.elevators[i], system.elevatorCount, system.floorCount, parent);
+            this.elevatorDrawers[i] = new ElevatorDrawer(system.elevators[i], system.elevatorCount, floorSystem.getFloorCount(), parent);
             this.elevatorDrawers[i].setDimensions(elevatorWidth, elevatorHeight);
         }
     }

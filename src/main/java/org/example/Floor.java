@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class Floor {
-    private final ElevatorSystem elevatorSystem;
+    private ElevatorSystem elevatorSystem;
     public int ID;
     boolean upPressed = false;
     boolean downPressed = false;
@@ -16,8 +16,12 @@ public class Floor {
 
     List<Person> people = new ArrayList<>();
 
-    public Floor(int ID, ElevatorSystem elevatorSystem){
+    public Floor(int ID){
         this.ID = ID;
+
+    }
+
+    public void addElevatorSystem(ElevatorSystem elevatorSystem){
         this.elevatorSystem = elevatorSystem;
     }
 
@@ -28,13 +32,17 @@ public class Floor {
     }
 
     public void pressUp(){
-        upPressed = true;
-        elevatorSystem.pickup(ID, Direction.UP);
+        if (elevatorSystem != null){
+            upPressed = true;
+            elevatorSystem.pickup(ID, Direction.UP);
+        }
     }
 
     public void pressDown(){
-        downPressed = true;
-        elevatorSystem.pickup(ID, Direction.DOWN);
+        if (elevatorSystem != null){
+            downPressed = true;
+            elevatorSystem.pickup(ID, Direction.DOWN);
+        }
     }
 
 
