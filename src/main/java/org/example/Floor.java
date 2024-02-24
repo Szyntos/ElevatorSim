@@ -43,6 +43,7 @@ public class Floor {
 
 
         if (elevator.getDirection() == Direction.ZERO){
+            // Select the more numerous group to board
             Person[] upBoardingPeople = people.stream()
                     .filter(person -> person.isWaiting() && person.getDirection() == Direction.UP)
                     .toArray(Person[]::new);
@@ -58,6 +59,7 @@ public class Floor {
                     .toArray(Person[]::new);
         }
 
+        // Add the elevator to the relevant group
         switch (elevator.getDirection()){
             case UP -> {
                 upPressed = false;
