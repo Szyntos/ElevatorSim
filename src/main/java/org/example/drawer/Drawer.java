@@ -3,7 +3,7 @@ package org.example.drawer;
 import org.example.ElevatorSystem;
 import processing.core.PApplet;
 
-public class Drawer {
+public class Drawer implements Drawable{
     PApplet parent;
     ElevatorSystem system;
     FloorDrawer[] floorDrawers;
@@ -11,11 +11,18 @@ public class Drawer {
     public Drawer(ElevatorSystem system, PApplet parent){
         this.system = system;
         this.parent = parent;
+        initializeFloorDrawers();
+        initializeElevatorDrawers();
+    }
+
+    public void initializeFloorDrawers(){
         this.floorDrawers = new FloorDrawer[system.floorCount];
         for (int i = 0; i < system.floorCount; i++) {
             this.floorDrawers[i] = new FloorDrawer(system.floors[i], system.floorCount, parent);
         }
         this.elevatorDrawers = new ElevatorDrawer[system.elevatorCount];
+    }
+    public void initializeElevatorDrawers(){
         int elevatorHeight = parent.height/(system.floorCount * 2);
         int elevatorWidth = parent.width/20;
         for (int i = 0; i < system.elevatorCount; i++) {
@@ -23,6 +30,7 @@ public class Drawer {
             this.elevatorDrawers[i].setDimensions(elevatorWidth, elevatorHeight);
         }
     }
+
     public void draw(){
         drawFloors();
         drawElevators();

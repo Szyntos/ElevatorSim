@@ -4,13 +4,11 @@ import org.example.Person;
 import processing.core.PApplet;
 
 public final class PersonDrawer implements Drawable{
-    Person person;
     PApplet parent;
     int x;
     int y;
     int width = 10;
     int height = 10;
-    int floorCount;
     Color color = new Color(0, 0, 0);
     int ID;
     public PersonDrawer(PApplet parent){
@@ -41,9 +39,5 @@ public final class PersonDrawer implements Drawable{
     public void draw() {
         parent.fill(color.r, color.g, color.b);
         parent.ellipse(x, y, width, height);
-//        parent.textSize(20);
-//        parent.fill(0);
-//        System.out.println(ID);
-//        parent.text(ID, x, y);
     }
 }

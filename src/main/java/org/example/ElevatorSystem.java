@@ -4,12 +4,13 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ElevatorSystem {
+public class ElevatorSystem implements ElevatorSystemInterface{
     public Floor[] floors;
     public int floorCount;
     public Elevator[] elevators;
     public int elevatorCount;
     public int elevatorCapacity;
+    public int allTimePeopleCount = 0;
     Random random;
     public ElevatorSystem(int floorCount, int elevatorCount, int elevatorCapacity, long seed){
         random = new Random(seed);
@@ -51,16 +52,12 @@ public class ElevatorSystem {
     }
 
     public void addPersonToFloor(int floorID, int desiredFloorID){
-        Person Gregory = new Person(0, this.floors[floorID], this.floors[desiredFloorID]);
+        Person Gregory = new Person(allTimePeopleCount, this.floors[floorID], this.floors[desiredFloorID]);
+        allTimePeopleCount++;
         this.floors[floorID].addPerson(Gregory);
     }
 
-    public void addPersonToFloor(int floorID, int desiredFloorID, int personID){
-        Person Gregory = new Person(personID, this.floors[floorID], this.floors[desiredFloorID]);
-        this.floors[floorID].addPerson(Gregory);
-    }
-
-    public void spawnRandomPerson(int personID){
+    public void spawnRandomPerson(){
 
         int floorID = random.nextInt(floorCount);
 
@@ -69,7 +66,7 @@ public class ElevatorSystem {
             desiredFloorID = random.nextInt(floorCount);
         }
 
-        addPersonToFloor(floorID, desiredFloorID, personID);
+        addPersonToFloor(floorID, desiredFloorID);
     }
 
     public void pickup(int fromFloor, Direction direction){
@@ -87,7 +84,7 @@ public class ElevatorSystem {
                 suitableElevators.add(elevator);
             }
         }
-        
+
         // Randomly choose one of the suitable elevators and call it
         if (!suitableElevators.isEmpty()) {
             Elevator chosenElevator = suitableElevators.get(random.nextInt(suitableElevators.size()));
@@ -111,6 +108,11 @@ public class ElevatorSystem {
                 floors) {
             floor.update();
         }
+    }
+
+    public int[] status(int elevatorID) {
+        return new int[]{elevators[elevatorID].getPassengersCount(), elevators[elevatorID].getCurrentFloor(),
+                elevators[elevatorID].getDesiredFloor()};
     }
 
     public String status() {

@@ -1,5 +1,6 @@
 package org.example;
 import org.example.drawer.Drawer;
+import org.example.drawer.Gui;
 import processing.core.PApplet;
 
 public class Main extends PApplet{
@@ -12,6 +13,7 @@ public class Main extends PApplet{
     int initialPeopleCount = 500;
     int frameStep = 10;
     Drawer drawer;
+    Gui gui;
     public static void main(String[] args) {
         PApplet.main("org.example.Main");
     }
@@ -22,6 +24,7 @@ public class Main extends PApplet{
         size(windowWidth, windowHeight);
         system = new ElevatorSystem(floorCount, elevatorCount, elevatorCapacity, 123);
         drawer = new Drawer(system, this);
+        gui = new Gui(system, this);
     }
 
     public void setup(){
@@ -31,7 +34,7 @@ public class Main extends PApplet{
 
 
         for (int j = 0; j < initialPeopleCount; j++) {
-            system.spawnRandomPerson(j);
+            system.spawnRandomPerson();
         }
     }
 
@@ -52,6 +55,7 @@ public class Main extends PApplet{
 //        }
 
         drawer.draw();
+//        gui.draw();
 
     }
 }

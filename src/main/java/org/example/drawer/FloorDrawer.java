@@ -21,8 +21,8 @@ public class FloorDrawer implements Drawable {
         this.parent = parent;
         int floorHeight = parent.height/(floorCount * 2);
         int floorWidth = parent.width;
-        setPosition(0, parent.height - parent.height / floorCount * (floor.ID) - floorHeight,
-                floorWidth, floorHeight/2);
+        setPosition(0, parent.height - parent.height / floorCount * (floor.ID) - floorHeight);
+        setDimensions(floorWidth, floorHeight/2);
         this.floorColor.setToFloor(floor.ID, floorCount);
         this.personDrawer = new PersonDrawer(parent);
     }
@@ -51,9 +51,13 @@ public class FloorDrawer implements Drawable {
         }
     }
 
-    public void setPosition(int x, int y, int width, int height){
+    public void setPosition(int x, int y){
         this.x = x;
         this.y = y;
+
+    }
+
+    public void setDimensions(int width, int height){
         this.width = width;
         this.height = height;
     }
