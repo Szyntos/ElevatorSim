@@ -1,5 +1,7 @@
-package org.example;
+package org.example.drawer;
 
+import org.example.Elevator;
+import org.example.Person;
 import org.example.drawer.Color;
 import org.example.drawer.Drawable;
 import org.example.drawer.PersonDrawer;

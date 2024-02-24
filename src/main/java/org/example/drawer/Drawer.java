@@ -1,6 +1,5 @@
 package org.example.drawer;
 
-import org.example.ElevatorDrawer;
 import org.example.ElevatorSystem;
 import processing.core.PApplet;
 

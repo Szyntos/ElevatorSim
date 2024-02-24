@@ -20,7 +20,7 @@ public class Main extends PApplet{
 
     public void settings() {
         size(windowWidth, windowHeight);
-        system = new ElevatorSystem(floorCount, elevatorCount, elevatorCapacity, this, 123);
+        system = new ElevatorSystem(floorCount, elevatorCount, elevatorCapacity, 123);
         drawer = new Drawer(system, this);
     }
 

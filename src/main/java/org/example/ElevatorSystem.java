@@ -1,18 +1,18 @@
 package org.example;
 
 import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ElevatorSystem {
-    private final Main parent;
     public Floor[] floors;
     public int floorCount;
     public Elevator[] elevators;
     public int elevatorCount;
     public int elevatorCapacity;
     Random random;
-    public ElevatorSystem(int floorCount, int elevatorCount, int elevatorCapacity, Main parent, long seed){
+    public ElevatorSystem(int floorCount, int elevatorCount, int elevatorCapacity, long seed){
         random = new Random(seed);
-        this.parent = parent;
 
         this.floorCount = floorCount;
         this.floors = new Floor[floorCount];
@@ -24,9 +24,8 @@ public class ElevatorSystem {
         initializeElevators();
     }
 
-    public ElevatorSystem(int floorCount, int elevatorCount, int elevatorCapacity, Main parent){
+    public ElevatorSystem(int floorCount, int elevatorCount, int elevatorCapacity){
         random = new Random();
-        this.parent = parent;
 
         this.floorCount = floorCount;
         this.floors = new Floor[floorCount];
@@ -39,21 +38,14 @@ public class ElevatorSystem {
     }
 
     public void initializeFloors(){
-//        int floorHeight = parent.height/(floorCount * 2);
-//        int floorWidth = parent.width;
         for (int i = 0; i < floorCount; i++) {
             this.floors[i] = new Floor(i, this);
-//            this.floors[i].setPosition(0, parent.height - parent.height / floorCount * (i) - floorHeight,
-//                    floorWidth, floorHeight/2);
         }
     }
 
     public void initializeElevators(){
-//        int elevatorHeight = parent.height/(floorCount * 2);
-//        int elevatorWidth = parent.width/20;
         for (int i = 0; i < elevatorCount; i++) {
             this.elevators[i] = new Elevator(i, this.elevatorCapacity, floors);
-//            this.elevators[i].setDimensions(elevatorWidth, elevatorHeight);
             this.elevators[i].update();
         }
     }
@@ -81,34 +73,27 @@ public class ElevatorSystem {
     }
 
     public void pickup(int fromFloor, Direction direction){
-
         int minimalETA = Integer.MAX_VALUE;
+        List<Elevator> suitableElevators = new ArrayList<>();
 
-        for (Elevator elevator :
-                elevators) {
-            if (minimalETA > elevator.getETA(fromFloor, direction)) {
-                minimalETA = elevator.getETA(fromFloor, direction);
+        // Find the minimal ETA among all elevators
+        for (Elevator elevator : elevators) {
+            int currentETA = elevator.getETA(fromFloor, direction);
+            if (currentETA < minimalETA) {
+                minimalETA = currentETA;
+                suitableElevators.clear(); // Reset the list for new minimal ETA
+                suitableElevators.add(elevator);
+            } else if (currentETA == minimalETA) {
+                suitableElevators.add(elevator);
             }
         }
-
-        int count = 0;
-        for (Elevator elevator :
-                elevators) {
-            if (minimalETA == elevator.getETA(fromFloor, direction)) {
-                count++;
-            }
+        
+        // Randomly choose one of the suitable elevators and call it
+        if (!suitableElevators.isEmpty()) {
+            Elevator chosenElevator = suitableElevators.get(random.nextInt(suitableElevators.size()));
+            chosenElevator.call(fromFloor, direction);
         }
 
-        Elevator[] suitableElevators = new Elevator[count];
-        int j = 0;
-        for (int i = 0; i < elevatorCount; i++) {
-            if (minimalETA == elevators[i].getETA(fromFloor, direction)){
-                suitableElevators[j] = elevators[i];
-                j++;
-            }
-        }
-
-        suitableElevators[random.nextInt(suitableElevators.length)].call(fromFloor, direction);
     }
 
     public void update(int elevatorID, int newCurrentFloor, int newDesiredFloor){
