@@ -1,13 +1,15 @@
 package org.example.drawer;
 
 import org.example.Main;
+import org.example.SpawnRandomPerson;
 import processing.core.PApplet;
 
 public class Button implements Drawable{
     PApplet parent;
     Shape shape;
     Shape icon = Shape.TRIANGLE;
-    private Runnable onClickBehaviour;
+    Behaviour behaviour = Behaviour.NONE;
+    private SpawnRandomPerson onClickSpawn;
     boolean isHovered = false;
     boolean mousePressedInside = false;
     boolean mouseReleasedInside = false;
@@ -40,15 +42,18 @@ public class Button implements Drawable{
     }
 
     public void click() {
-        System.out.println("clicked");
-        if (onClickBehaviour != null) {
-            onClickBehaviour.run();
+        switch (behaviour){
+            case SPAWN -> {
+                onClickSpawn.spawnRandomPerson();
+            }
         }
+
 
     }
 
-    public void setOnClickBehaviour(Runnable onClickBehaviour) {
-        this.onClickBehaviour = onClickBehaviour;
+    public void setOnClickSpawn(SpawnRandomPerson onClickBehaviour) {
+        this.onClickSpawn = onClickBehaviour;
+        this.behaviour = Behaviour.SPAWN;
     }
 
     private void drawIcon(){

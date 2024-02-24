@@ -4,7 +4,7 @@ import org.example.drawer.Gui;
 import processing.core.PApplet;
 
 public class Main extends PApplet{
-    static ElevatorSystem system;
+    static ElevatorSystem elevatorSystem;
     static FloorSystem floorSystem;
     public int windowWidth = 800;
     public int windowHeight = 600;
@@ -13,6 +13,8 @@ public class Main extends PApplet{
     int floorCount = 10;
     int initialPeopleCount = 500;
     int frameStep = 10;
+    int seed = 123;
+    boolean setSeed = true;
     Drawer drawer;
     Gui gui;
     public static void main(String[] args) {
@@ -23,11 +25,17 @@ public class Main extends PApplet{
 
     public void settings() {
         size(windowWidth, windowHeight);
-        floorSystem = new FloorSystem(floorCount);
-        system = new ElevatorSystem(floorSystem, elevatorCount, elevatorCapacity, 123);
-        floorSystem.addElevatorSystem(system);
-        drawer = new Drawer(floorSystem, system, this);
-        gui = new Gui(system, this);
+        if (setSeed){
+            floorSystem = new FloorSystem(floorCount, seed);
+            elevatorSystem = new ElevatorSystem(floorSystem, elevatorCount, elevatorCapacity, seed);
+        } else {
+            floorSystem = new FloorSystem(floorCount);
+            elevatorSystem = new ElevatorSystem(floorSystem, elevatorCount, elevatorCapacity);
+        }
+
+        floorSystem.addElevatorSystem(elevatorSystem);
+        drawer = new Drawer(floorSystem, elevatorSystem, this);
+        gui = new Gui(floorSystem, elevatorSystem, this);
     }
 
     public void setup(){
@@ -36,9 +44,9 @@ public class Main extends PApplet{
         surface.setResizable(true);
 
 
-        for (int j = 0; j < initialPeopleCount; j++) {
-            system.spawnRandomPerson();
-        }
+//        for (int j = 0; j < initialPeopleCount; j++) {
+//            floorSystem.spawnRandomPerson();
+//        }
     }
 
     public void draw() {
@@ -47,7 +55,7 @@ public class Main extends PApplet{
 
         if (frameCount % frameStep == 0 && frameCount != 0){
 
-            system.step();
+            elevatorSystem.step();
 
 //            System.out.println("============================================================\n\n\n");
 //            System.out.println((system.status()));
@@ -58,7 +66,7 @@ public class Main extends PApplet{
 //        }
 
         drawer.draw();
-//        gui.draw();
+        gui.draw();
 
     }
 }

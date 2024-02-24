@@ -1,11 +1,13 @@
 package org.example.drawer;
 
 import org.example.ElevatorSystem;
+import org.example.FloorSystem;
 import processing.core.PApplet;
 
 public class Gui implements Drawable{
     PApplet parent;
-    ElevatorSystem system;
+    ElevatorSystem elevatorSystem;
+    FloorSystem floorSystem;
     Color jacaranda = new Color(33, 2, 25);
     Color melanzane = new Color(52, 8, 41);
     Color stiletto = new Color(149, 44, 77);
@@ -17,10 +19,12 @@ public class Gui implements Drawable{
 
 
 
-    public Gui(ElevatorSystem system, PApplet parent){
+    public Gui(FloorSystem floorSystem, ElevatorSystem elevatorSystem, PApplet parent){
         this.parent = parent;
-        this.system = system;
+        this.floorSystem  =floorSystem;
+        this.elevatorSystem = elevatorSystem;
         this.playButton = new Button(Shape.CIRCLE, parent);
+        this.playButton.setOnClickSpawn(floorSystem::spawnRandomPerson);
         this.playButton.setIcon(Shape.TRIANGLE);
         this.stepButton = new Button(Shape.SQUARE, parent);
         this.stepButton.setIcon(Shape.FASTFORWARD);

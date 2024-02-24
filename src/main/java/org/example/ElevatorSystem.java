@@ -10,7 +10,6 @@ public class ElevatorSystem implements ElevatorSystemInterface{
     public Elevator[] elevators;
     public int elevatorCount;
     public int elevatorCapacity;
-    public int allTimePeopleCount = 0;
     Random random;
     public ElevatorSystem(FloorSystem floorSystem, int elevatorCount, int elevatorCapacity, long seed){
         random = new Random(seed);
@@ -46,23 +45,7 @@ public class ElevatorSystem implements ElevatorSystemInterface{
         }
     }
 
-    public void addPersonToFloor(int floorID, int desiredFloorID){
-        Person Gregory = new Person(allTimePeopleCount, this.floorSystem.getFloors()[floorID], this.floorSystem.getFloors()[desiredFloorID]);
-        allTimePeopleCount++;
-        this.floorSystem.getFloors()[floorID].addPerson(Gregory);
-    }
 
-    public void spawnRandomPerson(){
-
-        int floorID = random.nextInt(this.floorSystem.getFloorCount());
-
-        int desiredFloorID = random.nextInt(this.floorSystem.getFloorCount());
-        while (desiredFloorID == floorID){
-            desiredFloorID = random.nextInt(this.floorSystem.getFloorCount());
-        }
-
-        addPersonToFloor(floorID, desiredFloorID);
-    }
 
     public void pickup(int fromFloor, Direction direction){
         int minimalETA = Integer.MAX_VALUE;
