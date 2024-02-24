@@ -127,7 +127,7 @@ public class Floor {
                     break;
                 }
             }
-            upElevators.remove(elevatorToDelete);
+            elevatorList.remove(elevatorToDelete);
         }
     }
 
