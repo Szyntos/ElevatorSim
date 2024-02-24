@@ -42,7 +42,7 @@ public class ElevatorSystem {
 //        int floorHeight = parent.height/(floorCount * 2);
 //        int floorWidth = parent.width;
         for (int i = 0; i < floorCount; i++) {
-            this.floors[i] = new Floor(i, this, parent);
+            this.floors[i] = new Floor(i, this);
 //            this.floors[i].setPosition(0, parent.height - parent.height / floorCount * (i) - floorHeight,
 //                    floorWidth, floorHeight/2);
         }
