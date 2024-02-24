@@ -59,12 +59,12 @@ public class ElevatorSystem {
     }
 
     public void addPersonToFloor(int floorID, int desiredFloorID){
-        Person Gregory = new Person(0, this.floors[floorID], this.floors[desiredFloorID], parent);
+        Person Gregory = new Person(0, this.floors[floorID], this.floors[desiredFloorID]);
         this.floors[floorID].addPerson(Gregory);
     }
 
     public void addPersonToFloor(int floorID, int desiredFloorID, int personID){
-        Person Gregory = new Person(personID, this.floors[floorID], this.floors[desiredFloorID], parent);
+        Person Gregory = new Person(personID, this.floors[floorID], this.floors[desiredFloorID]);
         this.floors[floorID].addPerson(Gregory);
     }
 
