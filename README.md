@@ -7,7 +7,7 @@ Elevator Simulation done in Java. Uses Java Processing library for the visualisa
    - to start the simulation simply run Main.java
 2. Simulation Controls
    - Simulations Controls are explained in the following picture
-   ![Info](info.jpg?raw=true "Simulation Screen")
+   ![Info.jpg](https://raw.githubusercontent.com/Szyntos/ElevatorSim/main/Info.jpg)
    - The simulation screen is divided into the following sections:
       - Main body of the simulation
        - Displays all the floors with waiting people and all the elevators.
