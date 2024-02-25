@@ -19,19 +19,20 @@ public class FloorDrawer implements Drawable {
         this.floorCount = floorCount;
         this.floor = floor;
         this.parent = parent;
-        int floorHeight = parent.height/(floorCount * 2);
-        int floorWidth = parent.width;
-        setPosition(0, parent.height - parent.height / floorCount * (floor.ID) - floorHeight);
-        setDimensions(floorWidth, floorHeight/2);
+        update();
         this.floorColor.setToFloor(floor.ID, floorCount);
         this.personDrawer = new PersonDrawer(parent);
     }
 
     public void update(){
-
+        float floorHeight = (parent.height * 0.95f)/(floorCount * 2);
+        int floorWidth = (int) (parent.width * 0.7f);
+        setPosition((int) (parent.width * 0.3f), (int) (parent.height - floorHeight/2f - floor.ID * floorHeight*2));
+        setDimensions(floorWidth, (int)(floorHeight/2f));
     }
 
     private void drawFloor(){
+        update();
         parent.fill(floorColor.r, floorColor.g, floorColor.b);
         parent.rect(this.x, this.y, this.width, this.height);
         int rows = 3;
@@ -45,7 +46,7 @@ public class FloorDrawer implements Drawable {
             personColor.setToFloor(person.desiredFloor.ID, this.floorCount);
             personDrawer.setColor(personColor);
             personDrawer.setID(person.ID);
-            personDrawer.setPosition(this.x - k * personDrawer.getWidth() * 2 + parent.width/3, this.y - j * personDrawer.getHeight());
+            personDrawer.setPosition(this.x - (k) * personDrawer.getWidth() * 2 + parent.width/3*2, this.y - j * personDrawer.getHeight());
             personDrawer.draw();
             j++;
         }

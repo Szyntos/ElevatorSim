@@ -37,7 +37,9 @@ public final class PersonDrawer implements Drawable{
 
     @Override
     public void draw() {
+        parent.stroke(1);
         parent.fill(color.r, color.g, color.b);
         parent.ellipse(x, y, width, height);
+        parent.noStroke();
     }
 }

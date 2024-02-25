@@ -32,11 +32,6 @@ public class ElevatorSystem implements ElevatorSystemInterface{
         initializeElevators();
     }
 
-    public void initializeFloors(){
-        for (int i = 0; i < this.floorSystem.getFloorCount(); i++) {
-            this.floorSystem.getFloors()[i] = new Floor(i);
-        }
-    }
 
     public void initializeElevators(){
         for (int i = 0; i < elevatorCount; i++) {
@@ -68,6 +63,7 @@ public class ElevatorSystem implements ElevatorSystemInterface{
             Elevator chosenElevator = suitableElevators.get(random.nextInt(suitableElevators.size()));
             chosenElevator.call(fromFloor, direction);
         }
+
 
     }
 
@@ -116,5 +112,84 @@ public class ElevatorSystem implements ElevatorSystemInterface{
         }
         s.append("]");
         return s.toString();
+    }
+
+    public void addFloor(){
+        for (Elevator elevator :
+                elevators) {
+            elevator.addFloor();
+            elevator.setAllFloors(floorSystem.getFloors());
+        }
+
+    }
+    public void delFloor(){
+        for (Elevator elevator :
+                elevators) {
+            elevator.delFloor();
+            elevator.setAllFloors(floorSystem.getFloors());
+        }
+    }
+
+    public Elevator[] addElevatorToEnd(Elevator[] array) {
+        // Create a new array with size one element greater than the original array
+        Elevator[] newArray = new Elevator[array.length + 1];
+
+        // Copy elements from the original array to the new array
+        System.arraycopy(array, 0, newArray, 0, array.length);
+
+        // Assign 'false' to the last element of the new array
+        newArray[newArray.length - 1] = new Elevator(newArray.length - 1, elevatorCapacity, floorSystem.getFloors());
+//        newArray[newArray.length - 1].addElevatorSystem(this.elevatorSystem);
+
+        // Return the modified array
+        return newArray;
+    }
+
+    public static Elevator[] removeLastElement(Elevator[] array) {
+        // Check if the array is empty or has only one element
+        if (array == null || array.length <= 1) {
+            return new Elevator[0]; // return an empty array or the original array if it's empty or has only one element
+        }
+
+        // Create a new array with size one element smaller than the original array
+        Elevator[] newArray = new Elevator[array.length - 1];
+
+        // Copy elements from the original array to the new array, excluding the last element
+        System.arraycopy(array, 0, newArray, 0, newArray.length);
+
+        // Return the modified array
+        return newArray;
+    }
+
+    public void incrementElevatorCount(){
+        elevatorCount++;
+        elevators = addElevatorToEnd(elevators);
+        floorSystem.addElevator();
+    }
+
+    public void decrementElevatorCount(){
+        if (elevatorCount == 1){
+            return;
+        }
+        elevatorCount--;
+        elevators = removeLastElement(elevators);
+        floorSystem.delElevator();
+    }
+    public void incrementElevatorCapacity(){
+        elevatorCapacity++;
+        for (Elevator elevator :
+                elevators) {
+            elevator.setCapacity(elevator.getCapacity() + 1);
+        }
+    }
+    public void decrementElevatorCapacity(){
+        if (elevators[0].getCapacity() == 1){
+            return;
+        }
+        elevatorCapacity--;
+        for (Elevator elevator :
+                elevators) {
+            elevator.setCapacity(elevator.getCapacity() - 1);
+        }
     }
 }

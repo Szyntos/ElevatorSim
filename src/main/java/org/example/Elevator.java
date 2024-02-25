@@ -6,12 +6,12 @@ import java.util.List;
 public class Elevator {
     private int currentFloor = 0;
     private int desiredFloor = 0;
-    private final Floor[] allFloors;
-    private final boolean[] floorButtonsPressed;
-    private final boolean[] pickupUpDirections;
-    private final boolean[] pickupDownDirections;
-    private final boolean[] floorsToVisit;
-    private final int capacity;
+    private Floor[] allFloors;
+    private boolean[] floorButtonsPressed;
+    private boolean[] pickupUpDirections;
+    private boolean[] pickupDownDirections;
+    private boolean[] floorsToVisit;
+    private int capacity;
     private final int ID;
     private boolean isMoving = false;
     private final List<Person> passengers = new ArrayList<>();
@@ -306,6 +306,11 @@ public class Elevator {
         return capacity;
     }
 
+    public void setCapacity(int capacity){
+
+        this.capacity = capacity;
+    }
+
     public int getToVisitCount(){
         int count = 0;
         for (boolean floor :
@@ -317,13 +322,24 @@ public class Elevator {
         return count;
     }
 
+    public int getDistanceToLastStop(){
+        int maxDistance = 0;
+        for (int i = 0; i < floorsToVisit.length; i++) {
+            if (floorsToVisit[i]){
+                maxDistance = Math.max(maxDistance, Math.abs(currentFloor - i));
+            }
+        }
+        return maxDistance;
+    }
+
+
 
     public int getETA(int toFloor, Direction direction){
         int multiplier = 10;
 
-        // Penalty is computed as twice the amount of floors already in the queue
+        // Penalty is computed as twice the sum of the amount of floors already in the queue and distance to the last stop
         // It is added when it is not suitable to pick this elevator for this particular pickup
-        int penalty = getToVisitCount()*multiplier * 2 + 1;
+        int penalty = (getToVisitCount() + getDistanceToLastStop()) + multiplier * 2 + 1;
 
         int distance = Math.abs(currentFloor - toFloor)*multiplier + 1;
 
@@ -441,5 +457,59 @@ public class Elevator {
     public void setDesiredFloor(int desiredFloor) {
         this.desiredFloor = desiredFloor;
         updateDirection();
+    }
+
+    public static boolean[] addFalseToEnd(boolean[] array) {
+        // Create a new array with size one element greater than the original array
+        boolean[] newArray = new boolean[array.length + 1];
+
+        // Copy elements from the original array to the new array
+        System.arraycopy(array, 0, newArray, 0, array.length);
+
+        // Assign 'false' to the last element of the new array
+        newArray[newArray.length - 1] = false;
+
+        // Return the modified array
+        return newArray;
+    }
+
+    public static boolean[] removeLastElement(boolean[] array) {
+        // Check if the array is empty or has only one element
+        if (array == null || array.length <= 1) {
+            return new boolean[0]; // return an empty array or the original array if it's empty or has only one element
+        }
+
+        // Create a new array with size one element smaller than the original array
+        boolean[] newArray = new boolean[array.length - 1];
+
+        // Copy elements from the original array to the new array, excluding the last element
+        System.arraycopy(array, 0, newArray, 0, newArray.length);
+
+        // Return the modified array
+        return newArray;
+    }
+
+    public void addFloor() {
+        this.passengers.clear();
+        floorButtonsPressed = addFalseToEnd(floorButtonsPressed);
+        pickupUpDirections = addFalseToEnd(pickupUpDirections);
+        pickupDownDirections = addFalseToEnd(pickupDownDirections);
+        floorsToVisit = addFalseToEnd(floorsToVisit);
+    }
+    public void delFloor() {
+        if (this.getCurrentFloor() == floorButtonsPressed.length-1){
+            this.currentFloor = floorButtonsPressed.length-2;
+        }
+        if (this.getDesiredFloor() == floorButtonsPressed.length-1){
+            this.desiredFloor = floorButtonsPressed.length-2;
+        }
+        this.passengers.clear();
+        floorButtonsPressed = removeLastElement(floorButtonsPressed);
+        pickupUpDirections = removeLastElement(pickupUpDirections);
+        pickupDownDirections = removeLastElement(pickupDownDirections);
+        floorsToVisit = removeLastElement(floorsToVisit);
+    }
+    public void setAllFloors(Floor[] floors){
+        allFloors = floors;
     }
 }

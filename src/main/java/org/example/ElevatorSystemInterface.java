@@ -11,12 +11,3 @@ public interface ElevatorSystemInterface {
 }
 
 
-@FunctionalInterface
-interface Step {
-    void step();
-}
-
-@FunctionalInterface
-interface Pickup {
-    void pickup(int fromFloor, Direction direction);
-}

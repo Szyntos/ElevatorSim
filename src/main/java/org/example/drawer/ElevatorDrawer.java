@@ -16,7 +16,6 @@ public class ElevatorDrawer implements Drawable {
     int width;
     int height;
     int elevatorCount;
-    Color floorColor = new Color(0, 0, 0);
     Color personColor = new Color(0, 0, 0);
     PersonDrawer personDrawer;
     int floorCount;
@@ -27,14 +26,14 @@ public class ElevatorDrawer implements Drawable {
         this.floorCount = floorCount;
         this.elevator = elevator;
         this.parent = parent;
-        this.floorColor.setToFloor(elevator.getID(), elevatorCount);
         this.personDrawer = new PersonDrawer(parent);
     }
 
     public void updatePosition(){
-        setPosition(parent.width/elevatorCount/2 * elevator.getID() + parent.width/5 * 2,
-                parent.height - parent.height / floorCount * (elevator.getCurrentFloor())
-                        - parent.height/(floorCount * 2) - height);
+        float floorHeight = (parent.height * 0.95f)/(floorCount * 2);
+        int floorWidth = (int) (parent.width * 0.7f);
+        setPosition((int) ( (parent.width * 0.3f) + floorWidth / (elevatorCount) * (elevator.getID() + 0.5) - width/2),
+                (int) (parent.height - floorHeight/2f - elevator.getCurrentFloor() * floorHeight*2f - height));
     }
 
 
@@ -54,7 +53,7 @@ public class ElevatorDrawer implements Drawable {
         parent.rect(this.x, this.y, this.width, this.height);
         int j = 0;
         int k = 0;
-        int rows = 3;
+        int rows = elevator.getCapacity()/3+1;
         for (Person person : elevator.getPassengers()) {
             if (j > rows - 1) {
                 j = 0;
@@ -63,14 +62,15 @@ public class ElevatorDrawer implements Drawable {
             personColor.setToFloor(person.desiredFloor.ID, floorCount);
             personDrawer.setColor(personColor);
             personDrawer.setID(person.ID);
-            personDrawer.setPosition(this.x - k * personDrawer.getWidth() * 2, this.y - j * personDrawer.getHeight());
+            personDrawer.setPosition((int) (this.x - (k+0.5f) * personDrawer.getWidth() * 2 + this.width),
+                    (int) (this.y - (j+0.75f) * personDrawer.getHeight() + this.height));
             personDrawer.draw();
             j++;
         }
-        parent.textAlign(parent.CENTER);
-        parent.textSize(20);
-        parent.fill(0);
-        parent.text(elevator.getDirection().toString() + "\n" + elevator.getPassengersCount(), x + width, y + height);
+//        parent.textAlign(parent.CENTER);
+//        parent.textSize(20);
+//        parent.fill(0);
+//        parent.text(elevator.getDirection().toString() + "\n" + elevator.getPassengersCount(), x + width, y + height);
     }
 
     @Override

@@ -6,8 +6,3 @@ public interface FloorSystemInterface {
     void spawnRandomPerson();
 }
 
-@FunctionalInterface
-interface AddPersonToFloor {
-    void addPersonToFloor(int floorID, int desiredFloorID);
-}
-

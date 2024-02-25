@@ -47,7 +47,7 @@ public class Color {
     }
 
     public void setToFloor(int floorID, int floorCount){
-        this.setHSL(1/(double)(floorCount+1) * floorID,1, 0.5);
+        this.setHSL(1/(double)(floorCount+1) * floorID,0.75, 0.55);
     }
 
     public void printRGB(){

@@ -18,7 +18,6 @@ public class Floor {
 
     public Floor(int ID){
         this.ID = ID;
-
     }
 
     public void addElevatorSystem(ElevatorSystem elevatorSystem){
@@ -157,6 +156,17 @@ public class Floor {
                 return;
             }
         }
+    }
+
+    public void addElevator(){
+
+    }
+
+    public void delElevator(){
+        upElevators.clear();
+        downElevators.clear();
+        pressUp();
+        pressDown();
     }
 
     public List<Person> getPeople(){

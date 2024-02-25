@@ -10,11 +10,12 @@ public class Main extends PApplet{
     public int windowHeight = 600;
     int elevatorCapacity = 10;
     int elevatorCount = 5;
-    int floorCount = 10;
-    int initialPeopleCount = 500;
+    int floorCount = 8;
+    int initialPeopleCount = 0;
     int frameStep = 10;
     int seed = 123;
     boolean setSeed = true;
+    boolean startSimulation = true;
     Drawer drawer;
     Gui gui;
     public static void main(String[] args) {
@@ -35,35 +36,34 @@ public class Main extends PApplet{
 
         floorSystem.addElevatorSystem(elevatorSystem);
         drawer = new Drawer(floorSystem, elevatorSystem, this);
-        gui = new Gui(floorSystem, elevatorSystem, this);
+        gui = new Gui(floorSystem, elevatorSystem, this, this);
+    }
+
+    public void playPauseSimulation(){
+        startSimulation = !startSimulation;
     }
 
     public void setup(){
         frameRate(60);
         surface.setTitle("Elevator System");
         surface.setResizable(true);
+        noStroke();
 
 
-//        for (int j = 0; j < initialPeopleCount; j++) {
-//            floorSystem.spawnRandomPerson();
-//        }
+        for (int j = 0; j < initialPeopleCount; j++) {
+            floorSystem.spawnRandomPerson();
+        }
     }
 
     public void draw() {
         background(255);
 
 
-        if (frameCount % frameStep == 0 && frameCount != 0){
+        if (frameCount % frameStep == 0 && frameCount != 0 && startSimulation){
 
             elevatorSystem.step();
 
-//            System.out.println("============================================================\n\n\n");
-//            System.out.println((system.status()));
-
         }
-//        if (frameCount % frameStep > 0 && frameCount % frameStep < frameStep/2){
-//            ellipse(0, 0, 50, 50);
-//        }
 
         drawer.draw();
         gui.draw();
