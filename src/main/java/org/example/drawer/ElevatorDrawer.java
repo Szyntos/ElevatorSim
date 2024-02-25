@@ -1,10 +1,7 @@
 package org.example.drawer;
 
-import org.example.Elevator;
-import org.example.Person;
-import org.example.drawer.Color;
-import org.example.drawer.Drawable;
-import org.example.drawer.PersonDrawer;
+import org.example.interfaces.Elevator;
+import org.example.interfaces.Person;
 import processing.core.PApplet;
 
 public class ElevatorDrawer implements Drawable {
@@ -59,9 +56,9 @@ public class ElevatorDrawer implements Drawable {
                 j = 0;
                 k++;
             }
-            personColor.setToFloor(person.desiredFloor.ID, floorCount);
+            personColor.setToFloor(person.getDesiredFloor().getID(), floorCount);
             personDrawer.setColor(personColor);
-            personDrawer.setID(person.ID);
+            personDrawer.setID(person.getID());
             personDrawer.setPosition((int) (this.x - (k+0.5f) * personDrawer.getWidth() * 2 + this.width),
                     (int) (this.y - (j+0.75f) * personDrawer.getHeight() + this.height));
             personDrawer.draw();

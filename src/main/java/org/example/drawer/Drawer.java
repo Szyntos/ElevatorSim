@@ -1,7 +1,7 @@
 package org.example.drawer;
 
-import org.example.ElevatorSystem;
-import org.example.FloorSystem;
+import org.example.interfaces.ElevatorSystem;
+import org.example.interfaces.FloorSystem;
 import processing.core.PApplet;
 
 public class Drawer implements Drawable{
@@ -16,7 +16,7 @@ public class Drawer implements Drawable{
         this.floorSystem = floorSystem;
         this.elevatorSystem = elevatorSystem;
         this.floorCount = floorSystem.getFloorCount();
-        this.elevatorCount = elevatorSystem.elevatorCount;
+        this.elevatorCount = elevatorSystem.getElevatorCount();
         this.parent = parent;
         initializeFloorDrawers();
         initializeElevatorDrawers();
@@ -30,18 +30,18 @@ public class Drawer implements Drawable{
 
     }
     public void initializeElevatorDrawers(){
-        this.elevatorDrawers = new ElevatorDrawer[elevatorSystem.elevatorCount];
+        this.elevatorDrawers = new ElevatorDrawer[elevatorSystem.getElevatorCount()];
         int elevatorHeight = (int) (parent.height * 0.95f/(floorSystem.getFloorCount() * 2f));
-        int elevatorWidth = (int) (parent.width * 0.7f / (float)(elevatorSystem.elevatorCount) / 2f);
-        for (int i = 0; i < elevatorSystem.elevatorCount; i++) {
-            this.elevatorDrawers[i] = new ElevatorDrawer(elevatorSystem.elevators[i], elevatorSystem.elevatorCount, floorSystem.getFloorCount(), parent);
+        int elevatorWidth = (int) (parent.width * 0.7f / (float)(elevatorSystem.getElevatorCount()) / 2f);
+        for (int i = 0; i < elevatorSystem.getElevatorCount(); i++) {
+            this.elevatorDrawers[i] = new ElevatorDrawer(elevatorSystem.getElevators()[i], elevatorSystem.getElevatorCount(), floorSystem.getFloorCount(), parent);
             this.elevatorDrawers[i].setDimensions(elevatorWidth, elevatorHeight);
         }
     }
 
     public void draw(){
-        if (elevatorCount != elevatorSystem.elevatorCount || floorCount != floorSystem.getFloorCount()){
-            this.elevatorCount = elevatorSystem.elevatorCount;
+        if (elevatorCount != elevatorSystem.getElevatorCount() || floorCount != floorSystem.getFloorCount()){
+            this.elevatorCount = elevatorSystem.getElevatorCount();
             this.floorCount = floorSystem.getFloorCount();
             initializeElevatorDrawers();
             initializeFloorDrawers();

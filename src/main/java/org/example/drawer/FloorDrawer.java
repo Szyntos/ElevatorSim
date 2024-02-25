@@ -1,7 +1,7 @@
 package org.example.drawer;
 
-import org.example.Floor;
-import org.example.Person;
+import org.example.interfaces.Floor;
+import org.example.interfaces.Person;
 import processing.core.PApplet;
 
 public class FloorDrawer implements Drawable {
@@ -20,14 +20,14 @@ public class FloorDrawer implements Drawable {
         this.floor = floor;
         this.parent = parent;
         update();
-        this.floorColor.setToFloor(floor.ID, floorCount);
+        this.floorColor.setToFloor(floor.getID(), floorCount);
         this.personDrawer = new PersonDrawer(parent);
     }
 
     public void update(){
         float floorHeight = (parent.height * 0.95f)/(floorCount * 2);
         int floorWidth = (int) (parent.width * 0.7f);
-        setPosition((int) (parent.width * 0.3f), (int) (parent.height - floorHeight/2f - floor.ID * floorHeight*2));
+        setPosition((int) (parent.width * 0.3f), (int) (parent.height - floorHeight/2f - floor.getID() * floorHeight*2));
         setDimensions(floorWidth, (int)(floorHeight/2f));
     }
 
@@ -43,9 +43,9 @@ public class FloorDrawer implements Drawable {
                 j = 0;
                 k++;
             }
-            personColor.setToFloor(person.desiredFloor.ID, this.floorCount);
+            personColor.setToFloor(person.getDesiredFloor().getID(), this.floorCount);
             personDrawer.setColor(personColor);
-            personDrawer.setID(person.ID);
+            personDrawer.setID(person.getID());
             personDrawer.setPosition(this.x - (k) * personDrawer.getWidth() * 2 + parent.width/3*2, this.y - j * personDrawer.getHeight());
             personDrawer.draw();
             j++;

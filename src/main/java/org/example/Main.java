@@ -1,11 +1,13 @@
 package org.example;
 import org.example.drawer.Drawer;
 import org.example.drawer.Gui;
+import org.example.impl.ElevatorSystemImpl;
+import org.example.impl.FloorSystemImpl;
 import processing.core.PApplet;
 
 public class Main extends PApplet{
-    static ElevatorSystem elevatorSystem;
-    static FloorSystem floorSystem;
+    static ElevatorSystemImpl elevatorSystem;
+    static FloorSystemImpl floorSystem;
     public int windowWidth = 800;
     public int windowHeight = 600;
     int elevatorCapacity = 10;
@@ -27,11 +29,11 @@ public class Main extends PApplet{
     public void settings() {
         size(windowWidth, windowHeight);
         if (setSeed){
-            floorSystem = new FloorSystem(floorCount, seed);
-            elevatorSystem = new ElevatorSystem(floorSystem, elevatorCount, elevatorCapacity, seed);
+            floorSystem = new FloorSystemImpl(floorCount, seed);
+            elevatorSystem = new ElevatorSystemImpl(floorSystem, elevatorCount, elevatorCapacity, seed);
         } else {
-            floorSystem = new FloorSystem(floorCount);
-            elevatorSystem = new ElevatorSystem(floorSystem, elevatorCount, elevatorCapacity);
+            floorSystem = new FloorSystemImpl(floorCount);
+            elevatorSystem = new ElevatorSystemImpl(floorSystem, elevatorCount, elevatorCapacity);
         }
 
         floorSystem.addElevatorSystem(elevatorSystem);

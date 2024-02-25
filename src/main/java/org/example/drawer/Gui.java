@@ -1,9 +1,9 @@
 package org.example.drawer;
 
-import org.example.Direction;
-import org.example.ElevatorSystem;
-import org.example.FloorSystem;
-import org.example.Main;
+import org.example.*;
+import org.example.impl.Direction;
+import org.example.interfaces.ElevatorSystem;
+import org.example.interfaces.FloorSystem;
 import processing.core.PApplet;
 
 public class Gui implements Drawable{
@@ -241,19 +241,19 @@ public class Gui implements Drawable{
 
     public void incrementElevatorID(){
         selectedElevatorID++;
-        selectedElevatorID = Math.max(0, Math.min(selectedElevatorID, elevatorSystem.elevatorCount-1));
+        selectedElevatorID = Math.max(0, Math.min(selectedElevatorID, elevatorSystem.getElevatorCount()-1));
     }
     public void decrementElevatorID(){
         selectedElevatorID--;
-        selectedElevatorID = Math.max(0, Math.min(selectedElevatorID, elevatorSystem.elevatorCount-1));
+        selectedElevatorID = Math.max(0, Math.min(selectedElevatorID, elevatorSystem.getElevatorCount()-1));
     }
     public void incrementFloorID(){
         selectedFloorID++;
-        selectedFloorID = Math.max(0, Math.min(selectedFloorID, floorSystem.floorCount-1));
+        selectedFloorID = Math.max(0, Math.min(selectedFloorID, floorSystem.getFloorCount()-1));
     }
     public void decrementFloorID(){
         selectedFloorID--;
-        selectedFloorID = Math.max(0, Math.min(selectedFloorID, floorSystem.floorCount-1));
+        selectedFloorID = Math.max(0, Math.min(selectedFloorID, floorSystem.getFloorCount()-1));
     }
 
     public void incrementFloorCount(){
@@ -277,7 +277,7 @@ public class Gui implements Drawable{
     public void decrementElevatorCount(){
 
         elevatorSystem.decrementElevatorCount();
-        if (selectedElevatorID > elevatorSystem.elevatorCount-1){
+        if (selectedElevatorID > elevatorSystem.getElevatorCount()-1){
             selectedElevatorID--;
         }
     }
@@ -368,7 +368,7 @@ public class Gui implements Drawable{
         parent.rect(parent.width*0.3f/2f/10f*2f, parent.height * 0.05f + parent.height*0.04f, parent.width*0.3f/10f/2f*6f, parent.height*0.002f);
         parent.text("FloorCount", parent.width*0.3f/4, parent.height * 0.05f + parent.height*0.05f*1.5f);
         parent.textSize(parent.height*0.05f);
-        parent.text(floorSystem.floorCount, parent.width*0.3f/4, parent.height * 0.05f + parent.height*0.05f*2.5f);
+        parent.text(floorSystem.getFloorCount(), parent.width*0.3f/4, parent.height * 0.05f + parent.height*0.05f*2.5f);
         this.floorCountPlusButton.setPosition((int) (parent.width*0.3f/4 + parent.width * 0.05f/2f), (int) (parent.height * 0.05f  + parent.height*0.05f*1.6f));
         this.floorCountPlusButton.setDimensions(buttonWidth, buttonWidth);
         this.floorCountPlusButton.update();
@@ -382,7 +382,7 @@ public class Gui implements Drawable{
         parent.textSize(parent.height*0.05f*0.5f);
         parent.text("ElevatorCount", parent.width*0.3f/4, parent.height * 0.05f + parent.height*0.05f*(2.5f + 0.65f));
         parent.textSize(parent.height*0.05f);
-        parent.text(elevatorSystem.elevatorCount, parent.width*0.3f/4, parent.height * 0.05f + parent.height*0.05f*(3.5f + 0.65f));
+        parent.text(elevatorSystem.getElevatorCount(), parent.width*0.3f/4, parent.height * 0.05f + parent.height*0.05f*(3.5f + 0.65f));
         this.elevatorCountPlusButton.setPosition((int) (parent.width*0.3f/4 + parent.width * 0.05f/2f), (int) (parent.height * 0.05f  + parent.height*0.05f*(2.6f + 0.65f)));
         this.elevatorCountPlusButton.setDimensions(buttonWidth, buttonWidth);
         this.elevatorCountPlusButton.update();
@@ -396,7 +396,7 @@ public class Gui implements Drawable{
         parent.textSize(parent.height*0.05f*0.5f);
         parent.text("ElevatorCapacity", parent.width*0.3f/4, parent.height * 0.05f + parent.height*0.05f*(3.5f + 0.65f + 0.65f));
         parent.textSize(parent.height*0.05f);
-        parent.text(elevatorSystem.elevatorCapacity, parent.width*0.3f/4, parent.height * 0.05f + parent.height*0.05f*(4.5f + 0.65f + 0.65f));
+        parent.text(elevatorSystem.getElevatorCapacity(), parent.width*0.3f/4, parent.height * 0.05f + parent.height*0.05f*(4.5f + 0.65f + 0.65f));
         this.elevatorCapacityPlusButton.setPosition((int) (parent.width*0.3f/4 + parent.width * 0.05f/2f), (int) (parent.height * 0.05f  + parent.height*0.05f*(3.6f + 0.65f + 0.65f)));
         this.elevatorCapacityPlusButton.setDimensions(buttonWidth, buttonWidth);
         this.elevatorCapacityPlusButton.update();

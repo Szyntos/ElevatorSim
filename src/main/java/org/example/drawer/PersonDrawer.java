@@ -1,6 +1,5 @@
 package org.example.drawer;
 
-import org.example.Person;
 import processing.core.PApplet;
 
 public final class PersonDrawer implements Drawable{

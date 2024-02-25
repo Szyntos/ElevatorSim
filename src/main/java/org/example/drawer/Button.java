@@ -1,6 +1,6 @@
 package org.example.drawer;
 
-import org.example.*;
+import org.example.impl.Direction;
 import processing.core.PApplet;
 
 import java.util.Random;
