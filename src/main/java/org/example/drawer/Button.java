@@ -15,7 +15,6 @@ public class Button implements Drawable{
     private IntDirFunction onClickIntDirFunction;
     boolean isHovered = false;
     boolean mousePressedInside = false;
-    boolean mouseReleasedInside = false;
     int x;
     int y;
     int width;

@@ -181,15 +181,15 @@ public class Gui implements Drawable{
         for (int i = 0; i < floorSystem.getFloorCount()-1; i++) {
             upButtons[i].setDimensions(buttonWidth, buttonWidth);
             upButtons[i].setPosition((int) (0.15*parent.width + 0.05*(1.5)*parent.width - 0.5 * buttonWidth),
-                    (int) (parent.height - buttonWidth * 1.3f - i * floorHeight*2));
+                    (int) (parent.height - buttonWidth * 1.1f - i * floorHeight*2));
             downButtons[i].setDimensions(buttonWidth, buttonWidth);
             downButtons[i].setPosition((int) (0.15*parent.width + 0.05*(2.5)*parent.width - 0.5 * buttonWidth),
-                    (int) (parent.height - buttonWidth * 1.3f - (i+1) * floorHeight*2));
+                    (int) (parent.height - buttonWidth * 1.1f - (i+1) * floorHeight*2));
         }
         for (int i = 0; i < floorSystem.getFloorCount(); i++) {
             spawnButtons[i].setDimensions(buttonWidth, buttonWidth);
             spawnButtons[i].setPosition((int) (0.15*parent.width + 0.05*(0.5)*parent.width - 0.5 * buttonWidth),
-                    (int) (parent.height - buttonWidth * 1.3f - (i) * floorHeight*2));
+                    (int) (parent.height - buttonWidth * 1.1f - (i) * floorHeight*2));
         }
     }
 
@@ -262,7 +262,11 @@ public class Gui implements Drawable{
     }
 
     public void decrementFloorCount(){
+
         floorSystem.decrementFloorCount();
+        if (selectedFloorID > floorSystem.getFloorCount()-1){
+            selectedFloorID--;
+        }
         initializeButtonArrays();
     }
 
@@ -271,7 +275,11 @@ public class Gui implements Drawable{
     }
 
     public void decrementElevatorCount(){
+
         elevatorSystem.decrementElevatorCount();
+        if (selectedElevatorID > elevatorSystem.elevatorCount-1){
+            selectedElevatorID--;
+        }
     }
 
     public void incrementElevatorCapacity(){
