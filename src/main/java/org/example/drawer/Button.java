@@ -27,7 +27,7 @@ public class Button implements Drawable{
     Color primaryColor = new Color(0, 0, 0);
     Color secondaryColor = new Color(255, 255, 255);
     Color iconColor = new Color(0, 255, 0);
-    Color altIconColor = new Color(0, 0, 255);
+    Color altIconColor = new Color(140, 140, 140);
     Random random = new Random();
     public Button(PApplet parent){
         this.parent = parent;
@@ -141,7 +141,11 @@ public class Button implements Drawable{
     }
 
     private void drawIcon(){
-        parent.fill(iconColor.r, iconColor.g, iconColor.b);
+        if (isHovered && !isBackground){
+            parent.fill(altIconColor.r, altIconColor.g, altIconColor.b);
+        }else{
+            parent.fill(iconColor.r, iconColor.g, iconColor.b);
+        }
         switch (icon){
             case TRIANGLE -> {
                 parent.triangle(x + width * (0.5f - 1/6f), y + height * (0.5f - 1/4f),
@@ -223,6 +227,7 @@ public class Button implements Drawable{
         } else{
             parent.fill(primaryColor.r, primaryColor.g, primaryColor.b);
         }
+
         if (isBackground){
             if (this.shape == Shape.CIRCLE) {
                 this.parent.ellipse(x+width/2f, y+height/2f, width, height);
