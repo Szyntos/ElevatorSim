@@ -1,10 +1,11 @@
 # ElevatorSim
 
 Elevator Simulation done in Java 16. Uses Java Processing library (v. 3.3.7) for the visualisation and Maven for the dependencies.
+The code was tested on Windows machines, there may be some problems with the Processing library when running on macOS.
 
 ## User Manual
 1. Running the simulation
-   - to start the simulation simply run Main.java
+   - To start the simulation simply run Main.java
 2. Simulation Controls
    - Simulations Controls are explained in the following picture
    ![Info.jpg](https://raw.githubusercontent.com/Szyntos/ElevatorSim/main/Info.jpg)
