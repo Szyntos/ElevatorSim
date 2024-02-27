@@ -141,50 +141,67 @@ public class Button implements Drawable{
     }
 
     private void drawIcon(){
-        if (isHovered && !isBackground){
-            parent.fill(altIconColor.r, altIconColor.g, altIconColor.b);
-        }else{
-            parent.fill(iconColor.r, iconColor.g, iconColor.b);
-        }
+        parent.fill((isHovered && !isBackground) ? altIconColor.r : iconColor.r,
+                (isHovered && !isBackground) ? altIconColor.g : iconColor.g,
+                (isHovered && !isBackground) ? altIconColor.b : iconColor.b);
+
         switch (icon){
-            case TRIANGLE -> {
-                parent.triangle(x + width * (0.5f - 1/6f), y + height * (0.5f - 1/4f),
-                                x + width * (0.5f - 1/6f), y + height * (0.5f + 1/4f),
-                                x + width * (0.5f + 1/3f), y + height * (0.5f));
-            }
-            case FASTFORWARD -> {
-                parent.triangle(x + width * (0.5f - 1/4f - 2/14f), y + height * (0.5f - 1/4f),
-                        x + width * (0.5f - 1/4f - 2/14f), y + height * (0.5f + 1/4f),
-                        x + width * (0.5f + 1/4f - 2/14f), y + height * (0.5f));
-                parent.triangle(x + width * (0.5f - 1/4f + 2/12f), y + height * (0.5f - 1/4f),
-                        x + width * (0.5f - 1/4f + 2/12f), y + height * (0.5f + 1/4f),
-                        x + width * (0.5f + 1/4f + 2/12f), y + height * (0.5f));
-            }
-            case PLUS -> {
-                parent.rect(x + width/2f - width/16f, y + height/2f - height/16f*5, width / 8f, height * 5/8f);
-                parent.rect(x + width/2f - width/16f*5, y + height/2f - height/16f, width / 8f * 5, height / 8f);
-            }
-            case MINUS -> parent.rect(x + width/2f - width/16f*5, y + height/2f - height/16f, width / 8f * 5, height / 8f);
-            case STOP -> {
-                parent.rect(x + width/4f, y + height/6f, width / 6f, height * 4/6f);
-                parent.rect(x + width - width/4f - width/6f, y + height/6f, width / 6f, height * 4/6f);
-            }
-            case UPARROW -> {
-                parent.rect(x + width/2f - width/10f, y + height/2f - height/10f*2, width / 6f, height * 3/5f);
-                parent.triangle(x + width/2f, y + 1/8f*height,
-                        x + width/2f - 1/3f*width, y + height/2f - 1/16f * height,
-                        x + width/2f + 1/3f*width, y + height/2f - 1/16f * height);
-            }
-            case DOWNARROW -> {
-                parent.rect(x + width/2f - width/10f, y + height/2f - height/10f*4, width / 6f, height * 3/5f);
-                parent.triangle(x + width/2f, y + height - 1/8f*height,
-                        x + width/2f - 1/3f*width, y + height/2f + 1/16f * height,
-                        x + width/2f + 1/3f*width, y + height/2f + 1/16f * height);
-            }
-            case CIRCLE -> {
-                this.parent.ellipse(x+width/2f, y+height/2f, width/2f, height/2f);
-            }
+            case TRIANGLE -> drawTriangle();
+            case FASTFORWARD -> drawFastForward();
+            case PLUS -> drawPlus();
+            case MINUS -> drawMinus();
+            case STOP -> drawStop();
+            case UPARROW -> drawUpArrow();
+            case DOWNARROW -> drawDownArrow();
+            case CIRCLE -> drawCircle();
         }
+    }
+
+    private void drawTriangle() {
+        parent.triangle(x + width * (0.5f - 1/6f), y + height * (0.5f - 1/4f),
+                x + width * (0.5f - 1/6f), y + height * (0.5f + 1/4f),
+                x + width * (0.5f + 1/3f), y + height * (0.5f));
+    }
+
+    private void drawFastForward() {
+        parent.triangle(x + width * (0.5f - 1 / 4f - 2 / 14f), y + height * (0.5f - 1 / 4f),
+                x + width * (0.5f - 1 / 4f - 2 / 14f), y + height * (0.5f + 1 / 4f),
+                x + width * (0.5f + 1 / 4f - 2 / 14f), y + height * (0.5f));
+        parent.triangle(x + width * (0.5f - 1 / 4f + 2 / 12f), y + height * (0.5f - 1 / 4f),
+                x + width * (0.5f - 1 / 4f + 2 / 12f), y + height * (0.5f + 1 / 4f),
+                x + width * (0.5f + 1 / 4f + 2 / 12f), y + height * (0.5f));
+    }
+
+    private void drawPlus() {
+            parent.rect(x + width/2f - width/16f, y + height/2f - height/16f*5, width / 8f, height * 5/8f);
+            parent.rect(x + width/2f - width/16f*5, y + height/2f - height/16f, width / 8f * 5, height / 8f);
+    }
+
+    private void drawMinus() {
+        parent.rect(x + width/2f - width/16f*5, y + height/2f - height/16f, width / 8f * 5, height / 8f);
+    }
+
+    private void drawStop() {
+        parent.rect(x + width/4f, y + height/6f, width / 6f, height * 4/6f);
+        parent.rect(x + width - width/4f - width/6f, y + height/6f, width / 6f, height * 4/6f);
+    }
+
+    private void drawUpArrow() {
+        parent.rect(x + width/2f - width/10f, y + height/2f - height/10f*2, width / 6f, height * 3/5f);
+        parent.triangle(x + width/2f, y + 1/8f*height,
+                x + width/2f - 1/3f*width, y + height/2f - 1/16f * height,
+                x + width/2f + 1/3f*width, y + height/2f - 1/16f * height);
+    }
+
+    private void drawDownArrow() {
+        parent.rect(x + width/2f - width/10f, y + height/2f - height/10f*4, width / 6f, height * 3/5f);
+        parent.triangle(x + width/2f, y + height - 1/8f*height,
+                x + width/2f - 1/3f*width, y + height/2f + 1/16f * height,
+                x + width/2f + 1/3f*width, y + height/2f + 1/16f * height);
+    }
+
+    private void drawCircle() {
+        this.parent.ellipse(x+width/2f, y+height/2f, width/2f, height/2f);
     }
 
     public void cycleBackground(){

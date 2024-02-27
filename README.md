@@ -1,6 +1,6 @@
 # ElevatorSim
 
-Elevator Simulation done in Java. Uses Java Processing library for the visualisation and Maven for the dependencies.
+Elevator Simulation done in Java 16. Uses Java Processing library (v. 3.3.7) for the visualisation and Maven for the dependencies.
 
 ## User Manual
 1. Running the simulation
